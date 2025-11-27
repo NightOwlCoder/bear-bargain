@@ -21,6 +21,7 @@ Start here, then follow the sequence:
 | 9️⃣ | `docs/APIKeys.md` | API key setup (CoinGecko, Grok, Sentry) | **Before running app** |
 | 🔟 | `docs/Testing.md` | Unit/E2E/Visual testing strategy | When writing tests |
 | 1️⃣1️⃣ | `docs/LegalDisclaimers.md` | Required disclaimers, App Store copy | When adding legal |
+| 1️⃣2️⃣ | `docs/CodexSetup.md` | **OpenAI Codex Cloud configuration** | **When using Codex** |
 
 ---
 
