@@ -1,5 +1,9 @@
 # BearBargain README.md
 
+> **🤖 For Implementation LLMs:** Start with [`AGENTS.md`](./AGENTS.md) for the complete implementation guide, then read docs in order: `PRD.md` → `Architecture.md` → `Schemas.md` → `StateFlows.md`.
+
+---
+
 ## 🐻 BearBargain - Buy Low, Sell High Crypto ETF Companion
 
 **BearBargain** is an iOS-first React Native app for Charles Schwab degens to **SNIPE DCA DIPS** and **HODL LIKE BEARS**. Think v0's buttery chat UX but for **hunting ETF bargains in IBIT, ETHA, and STCE** while the normies panic sell. 
