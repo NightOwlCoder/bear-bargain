@@ -17,8 +17,10 @@ Start here, then follow the sequence:
 | 5️⃣ | `docs/StateFlows.md` | Mermaid state machines for hooks | When implementing hooks |
 | 6️⃣ | `docs/DesignLanguage.md` | Colors, typography, animation curves | When styling |
 | 7️⃣ | `docs/ErrorStates.md` | Error UI components | When handling errors |
-| 8️⃣ | `docs/Setup.md` | Environment, API keys, dependencies | When setting up dev |
-| 9️⃣ | `docs/LegalDisclaimers.md` | Required disclaimers, App Store copy | When adding legal |
+| 8️⃣ | `docs/Setup.md` | Environment, dependencies, commands | When setting up dev |
+| 9️⃣ | `docs/APIKeys.md` | API key setup (CoinGecko, Grok, Sentry) | **Before running app** |
+| 🔟 | `docs/Testing.md` | Unit/E2E/Visual testing strategy | When writing tests |
+| 1️⃣1️⃣ | `docs/LegalDisclaimers.md` | Required disclaimers, App Store copy | When adding legal |
 
 ---
 
