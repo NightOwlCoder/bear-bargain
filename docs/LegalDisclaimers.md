@@ -335,7 +335,117 @@ before making any investment decisions.
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0 | 2025-XX-XX | Initial placeholder copy |
+| 1.1 | TBD | Lawyer-reviewed copy |
 
-**Next review**: Before App Store submission
+**Next review**: Q1 2026 (before App Store submission)
 
 **Legal contact**: [TBD - Add lawyer contact]
+
+---
+
+## 📱 App Store Metadata
+
+### App Store Category
+- **Primary**: Finance
+- **Secondary**: Education
+
+### App Store Keywords
+```
+crypto, etf, dca, dollar cost averaging, bitcoin, ethereum, 
+investment simulator, portfolio tracker, buy low sell high, 
+hodl, ibit, etha, trading simulator, crypto education
+```
+
+### Age Rating
+- **Rating**: 17+
+- **Reason**: Simulated gambling (investment simulations)
+
+### App Store Subtitle (30 chars max)
+```
+DCA Dips Like a Bear 🐻📉
+```
+
+### Promotional Text (170 chars max)
+```
+Hunt crypto ETF bargains! BearBargain helps you DCA during dips with AI insights. No real trades—just smarter strategy simulations. HODL like a pro! 🐻🚀
+```
+
+### Full Description
+```
+🐻 BEARBARGAIN - Your Dip-Hunting Companion
+
+Master the art of "buy low, sell high" with BearBargain—the fun, 
+educational app for crypto ETF investors.
+
+WHAT IT DOES:
+• Track IBIT, ETHA, and STCE prices in real-time
+• Get alerts when prices dip 10%+ (BEAR CLAW notifications!)
+• Chat with TradeWhisperer AI for strategy insights
+• Simulate DCA purchases and HODL scenarios
+• Visualize projected gains with moon math 📈
+
+WHAT IT DOESN'T DO:
+❌ Execute real trades
+❌ Connect to your brokerage
+❌ Provide financial advice
+❌ Store your financial data
+
+PERFECT FOR:
+• Schwab users learning crypto ETFs
+• DCA enthusiasts who hate timing the market
+• Anyone who wants to practice without risking real money
+
+FEATURES:
+🐾 Bear-themed UI with claw swipe animations
+🎯 Customizable dip thresholds (10-30%)
+🤖 AI chat that doesn't moralize (finally!)
+📊 Local portfolio tracking
+🔔 Push notifications with bear growl sounds
+🌙 Dark mode for late-night dip hunting
+
+FREE TIER:
+• 3 simulations per day
+• 5 active alerts
+• Basic AI chat
+
+PREMIUM ($4.99/mo):
+• Unlimited simulations
+• Unlimited alerts
+• Custom AI personas (Degen Bear, Chill HODLer)
+• Voice responses
+
+─────────────────────────────────
+IMPORTANT: BearBargain is an EDUCATIONAL TOOL only.
+
+• All trades are simulations
+• No real money is involved
+• Not financial advice
+• Not affiliated with Charles Schwab
+
+Cryptocurrency and ETF investments carry significant risk. 
+You could lose your entire investment. Past performance 
+does not predict future results. Consult a licensed 
+financial advisor before making investment decisions.
+
+18+ only.
+─────────────────────────────────
+
+Questions? support@bearbargain.app
+Privacy Policy: bearbargain.app/privacy
+Terms: bearbargain.app/terms
+
+Happy hunting! 🐻📉➡️🚀
+```
+
+### What's New (Version 1.0)
+```
+🐻 Welcome to BearBargain!
+
+• Dip Dashboard with real-time ETF tracking
+• TradeWhisperer AI chat
+• DCA simulation and projections
+• Portfolio tracking
+• Push notifications with BEAR CLAW alerts
+
+Hunt those dips! 🐾
+```

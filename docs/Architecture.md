@@ -291,22 +291,59 @@ useAnimatedReaction(
 ### Feature Flags
 
 ```typescript
-// utils/featureFlags.ts
+// src/utils/featureFlags.ts
 import Constants from 'expo-constants';
+import { useRevenueCat } from '@/hooks/useRevenueCat';
 
+// Premium feature gating
 export const FeatureFlags = {
-  isPremium: () => {
+  // Check RevenueCat subscription status
+  isPremium: (): boolean => {
     const { hasActiveSubscription } = useRevenueCat();
     return hasActiveSubscription;
   },
   
+  // Free tier limits
   maxFreeSims: 3,
+  maxFreeAlerts: 5,
   
-  isFeatureEnabled: (feature: FeatureKey) => {
+  // Premium unlocks
+  PREMIUM_SIMS: true,           // Unlimited simulations
+  PREMIUM_PERSONAS: true,       // Custom AI personas (Degen Bear, Chill HODLer)
+  PREMIUM_ALERTS: true,         // Unlimited custom alerts
+  PREMIUM_VOICE: true,          // TTS responses
+  
+  // Remote config for A/B tests
+  isFeatureEnabled: (feature: FeatureKey): boolean => {
     const remoteConfig = Constants.expoConfig?.extra?.features;
     return remoteConfig?.[feature] ?? false;
   },
+  
+  // Gate a feature based on premium status
+  canAccess: (feature: PremiumFeature): boolean => {
+    const premium = FeatureFlags.isPremium();
+    if (premium) return true;
+    
+    // Free tier checks
+    switch (feature) {
+      case 'simulation':
+        return getDailySimCount() < FeatureFlags.maxFreeSims;
+      case 'alert':
+        return getActiveAlertCount() < FeatureFlags.maxFreeAlerts;
+      default:
+        return false;
+    }
+  },
 };
+
+type FeatureKey = 'voiceEnabled' | 'newDashboard' | 'betaFeatures';
+type PremiumFeature = 'simulation' | 'alert' | 'persona' | 'voice';
+
+// Usage example:
+// if (!FeatureFlags.canAccess('simulation')) {
+//   showPaywallModal();
+//   return;
+// }
 ```
 
 ## 🔌 External Integrations

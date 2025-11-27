@@ -67,7 +67,7 @@ Prioritized for MVP; grouped by module.
 **Review Question (AI Integration #18)**: Response Chunking: Your AGENTS.md shows Trade Whisperer outputs 6 chunks for stagger animation. **But what if the AI returns 3 chunks? Or 12?** Is the UI flexible or hardcoded to 6? (To iterate: Make UI flexible with dynamic chunking.)
 
 ### 4.3 Portfolio Tracker & Simulations
-- Import: Manual Schwab CSV upload or entry; auto-parse positions.
+- Import: Manual entry or local sim data import; auto-parse positions.
 - Views: Pie chart of holdings; line graphs with animated "growth arcs" (Reanimated morphs).
 - Simulations: "What-if" tool for sells (e.g., take 20-30% profits on doubles); offline queue for trades.
 - History: Virtualized list of past DCAs/sims with confetti on "wins."
@@ -168,4 +168,3 @@ Prioritized for MVP; grouped by module.
 **Review Question (Testing & Quality #22)**: "Beta with 10 users": How are you recruiting them? Your spec doesn't mention TestFlight distribution, feedback collection tools (Instabug? Intercom?), or crash reporting beyond "Sentry DSN." (To iterate: Add TestFlight + Firebase Analytics.)
 
 **Review Question (Testing & Quality #23)**: Animation Performance: You mention "test on older devices" but **what's the minimum device target?** iPhone 8? iPhone X? A 5-year-old device may not handle 5 concurrent Reanimated animations at 60fps. (To iterate: Set min iPhone 11.)
-

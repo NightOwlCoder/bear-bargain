@@ -482,6 +482,126 @@ const useAnimationPool = () => {
 
 ---
 
+## 6. Voice Pipeline Flow (TradeWhispererChat)
+
+Full STT → Grok → TTS audio pipeline for voice-enabled chat.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Idle: Chat ready
+    
+    Idle --> Recording: Tap mic button
+    Recording --> Listening: Mic activated
+    
+    Listening --> STTProcessing: Release mic / Silence detected
+    Listening --> Cancelled: Tap cancel
+    Cancelled --> Idle: Reset
+    
+    STTProcessing --> TextReady: Expo Speech success
+    STTProcessing --> STTError: Recognition failed
+    STTError --> Idle: Show toast "Couldn't hear you 🐻"
+    
+    TextReady --> Composing: Insert transcribed text
+    Composing --> Sending: Auto-submit or manual send
+    
+    Sending --> GrokQuery: POST to Vercel Edge
+    GrokQuery --> Streaming: Chunks arrive
+    GrokQuery --> Fallback: API timeout (10s)
+    
+    Fallback --> LocalMeme: Generate fallback
+    LocalMeme --> TTSQueue: "HODL mode activated 🐻"
+    
+    Streaming --> ChunkBuffer: Buffer 2-12 chunks
+    ChunkBuffer --> TTSQueue: All chunks received
+    
+    TTSQueue --> TTSPlaying: Expo Speech TTS start
+    TTSPlaying --> StaggeredDisplay: Sync text fade with audio
+    
+    StaggeredDisplay --> Parsed: All chunks displayed
+    Parsed --> ActionCheck: Parse for buy/sell commands
+    
+    ActionCheck --> TradePopup: Action detected
+    ActionCheck --> Idle: No action
+    
+    TradePopup --> Idle: After popup closes
+    
+    note right of TTSPlaying
+      Audio + visual sync:
+      - TTS speaks chunk
+      - Text fades in 32ms/word
+      - Bear roar on action detected
+    end note
+```
+
+### Voice States
+
+| State | Audio | Visual | Duration |
+|-------|-------|--------|----------|
+| **Idle** | Silent | Blinking cursor | Until tap |
+| **Recording** | Mic active | Pulsing red dot | Until release |
+| **STTProcessing** | Silent | Spinner | 1-3s |
+| **TTSPlaying** | AI voice | Words fading in | Per chunk length |
+| **StaggeredDisplay** | Completing | Text appearing | 32ms × word count |
+
+### Voice Implementation
+
+```typescript
+// hooks/useVoicePipeline.ts
+interface VoiceState {
+  status: 'idle' | 'recording' | 'processing' | 'playing' | 'error';
+  transcript: string;
+  audioQueue: string[];
+  currentChunk: number;
+}
+
+const useVoicePipeline = () => {
+  const [state, setState] = useState<VoiceState>({
+    status: 'idle',
+    transcript: '',
+    audioQueue: [],
+    currentChunk: 0,
+  });
+  
+  const startRecording = async () => {
+    setState(prev => ({ ...prev, status: 'recording' }));
+    await Speech.startListening({
+      language: 'en-US',
+      onResult: (result) => {
+        setState(prev => ({ 
+          ...prev, 
+          transcript: result.value[0],
+          status: 'processing',
+        }));
+      },
+      onError: () => {
+        setState(prev => ({ ...prev, status: 'error' }));
+      },
+    });
+  };
+  
+  const speakResponse = async (chunks: string[]) => {
+    setState(prev => ({ ...prev, status: 'playing', audioQueue: chunks }));
+    
+    for (let i = 0; i < chunks.length; i++) {
+      setState(prev => ({ ...prev, currentChunk: i }));
+      await Speech.speak(chunks[i], {
+        language: 'en-US',
+        rate: 1.1, // Slightly faster for degen energy
+        onDone: () => {
+          // Sync with stagger animation
+        },
+      });
+    }
+    
+    setState(prev => ({ ...prev, status: 'idle' }));
+  };
+  
+  return { state, startRecording, speakResponse };
+};
+```
+
+---
+
 ## State Flow Testing Checklist
 
 Use these scenarios for Detox E2E tests:
