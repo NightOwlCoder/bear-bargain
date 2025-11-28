@@ -22,6 +22,21 @@ Start here, then follow the sequence:
 | 🔟 | `docs/Testing.md` | Unit/E2E/Visual testing strategy | When writing tests |
 | 1️⃣1️⃣ | `docs/LegalDisclaimers.md` | Required disclaimers, App Store copy | When adding legal |
 | 1️⃣2️⃣ | `docs/CodexSetup.md` | **OpenAI Codex Cloud configuration** | **When using Codex** |
+| 📋 | `docs/tasks/` | **Pre-built task prompts for Codex** | **When starting tasks** |
+
+---
+
+## 📋 Codex Task Prompts
+
+Ready-to-use prompts for Codex are in `docs/tasks/`:
+
+| Task | File | What It Builds |
+|------|------|----------------|
+| **Task 1** | `task-1-dip-detector.md` | Core dip detection + live prices + bear claw animation |
+| **Task 2** | *(coming soon)* | TradeConfirmPopup + moon math projections |
+| **Task 3** | *(coming soon)* | TradeWhisperer AI chat integration |
+
+**Usage:** Copy task file content → Paste into Codex → Watch magic happen 🐻
 
 ---
 
