@@ -124,13 +124,89 @@ echo "🐻 Ready to build! Start with: npm run dev"
 
 ---
 
-### 5. Other Settings
+### 5. Maintenance Script (CRITICAL for Multi-Task)
+
+Codex runs this **before every new task** to clean the workspace. Without it, Task 1's temp files can break Task 2.
+
+Paste in the **Maintenance Script** field:
+
+```bash
+#!/bin/bash
+set -e
+
+echo "🧹 BearBargain Codex Maintenance - Cleaning workspace..."
+
+# ========================================
+# 1. Remove temporary/build files
+# ========================================
+echo "🗑️  Removing temp files..."
+rm -rf \
+  .expo \
+  .gradle \
+  android/app/build \
+  ios/build \
+  node_modules/.cache \
+  coverage \
+  dist \
+  *.log \
+  tmp/ \
+  2>/dev/null || true
+
+# ========================================
+# 2. Clean node_modules (if corrupted)
+# ========================================
+if [ -f "package-lock.json" ]; then
+  echo "🧹 Refreshing node_modules..."
+  rm -rf node_modules
+  npm install --no-optional --no-audit
+fi
+
+# ========================================
+# 3. Reset Expo cache
+# ========================================
+echo "🔄 Clearing Expo cache..."
+npx expo start --clear --non-interactive 2>/dev/null &
+sleep 2
+kill %1 2>/dev/null || true
+
+# ========================================
+# 4. Remove stray test files
+# ========================================
+echo "🧹 Removing test artifacts..."
+find . -name "*.test.ts" -not -path "./__tests__/*" -not -path "./src/__tests__/*" -delete 2>/dev/null || true
+find . -name "*.spec.ts" -not -path "./__tests__/*" -not -path "./src/__tests__/*" -delete 2>/dev/null || true
+find . -name "__snapshots__" -type d -exec rm -rf {} + 2>/dev/null || true
+
+# ========================================
+# 5. Preserve critical files
+# ========================================
+echo "✅ Preserving critical files..."
+touch .env.example AGENTS.md package.json 2>/dev/null || true
+
+# ========================================
+# 6. Verify workspace integrity
+# ========================================
+echo ""
+echo "📊 Workspace integrity check:"
+echo "✅ AGENTS.md exists: $([ -f AGENTS.md ] && echo 'YES' || echo 'NO')"
+echo "✅ package.json exists: $([ -f package.json ] && echo 'YES' || echo 'NO')"
+echo "✅ docs/ exists: $([ -d docs ] && echo 'YES' || echo 'NO')"
+echo "✅ src/types/schemas.ts exists: $([ -f src/types/schemas.ts ] && echo 'YES' || echo 'NO')"
+
+echo ""
+echo "🧹 Maintenance complete! Workspace ready for next task."
+```
+
+---
+
+### 6. Other Settings
 
 | Setting | Recommended | Reason |
 |---------|-------------|--------|
 | **Container image** | `universal` | Has Node, npm pre-installed |
 | **Container Caching** | `On` ✅ | Faster subsequent tasks |
 | **Setup script** | `Manual` | Custom Expo/RN setup |
+| **Maintenance script** | `Manual` | Clean workspace between tasks |
 | **Agent internet access** | `Off` | Using mock prices in demo mode |
 
 ---
@@ -203,10 +279,25 @@ Implement the full DipDashboard screen following AGENTS.md priority order. Start
 ## ✅ Ready to Create?
 
 1. Fill in **Description** field
-2. Add **Environment variables** (7 items)
+2. Add **Environment variables** (8 items)
 3. Add **Secrets** (3 items) 
 4. Switch to **Manual** setup script and paste the script
-5. Toggle **Container Caching** to `On`
-6. Click **"Create environment"**
+5. **NEW:** Add **Maintenance script** (paste from Section 5)
+6. Toggle **Container Caching** to `On`
+7. Click **"Create environment"**
+
+### Test Your Setup
+
+After creating the environment, run this verification task:
+
+```
+Verify workspace setup. List src/ files. Check AGENTS.md exists. Run npm install.
+```
+
+**Expected output:**
+- ✅ `src/` contains: `types/`, `constants/`, `utils/`
+- ✅ `AGENTS.md` found at root
+- ✅ `npm install` completed
+- ✅ Ready for first coding task
 
 🐻 **Your AI coding partner is ready to MOON!** 🚀

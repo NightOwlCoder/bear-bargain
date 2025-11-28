@@ -333,6 +333,7 @@ Run through these after setup to confirm everything works:
 - [ ] Console logs "DIP DETECTED! 🐻📉"
 - [ ] TradeConfirmPopup opens on alert tap
 - [ ] Settings screen loads
+- [ ] **CoinGecko Attribution**: "Powered by CoinGecko" footer visible + logo link (tap opens coingecko.com)
 
 ### Animations
 

@@ -254,7 +254,39 @@ Data deletion: Clear all data in Settings > Reset App
 
 ---
 
-## 8. Terms of Service Summary
+## 8. CoinGecko Attribution (API Compliance)
+
+**Display**: Dashboard footer, Settings > Credits
+
+```
+┌────────────────────────────────────────────┐
+│ 🐻 BEAR GROWL: DATA SOURCING 🐾            │
+│                                            │
+│ All crypto prices powered by               │
+│ CoinGecko API                              │
+│                                            │
+│ [CoinGecko Logo] Data powered by CoinGecko │
+│                                            │
+│ Attribution required—check Settings for    │
+│ full credits.                              │
+└────────────────────────────────────────────┘
+```
+
+**Legal Bit**: 
+- Data for educational use only
+- CoinGecko API terms apply ([coingecko.com/en/api_terms](https://www.coingecko.com/en/api_terms))
+- No commercial resale of data
+- Proper linking mandatory (hyperlink to coingecko.com)
+- DYOR on their TOS
+
+**Implementation locations**:
+- Dashboard footer (always visible)
+- Settings > Credits (full attribution)
+- Each ETF price card (optional badge)
+
+---
+
+## 9. Terms of Service Summary
 
 **Full terms at**: `bearbargain.app/terms`
 

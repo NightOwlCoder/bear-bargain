@@ -68,6 +68,7 @@ export const spacing = {
 | **Bear Roar** | Open-mouthed bear head (silhouette) | Notifications, wins | Scale pulse (1 → 1.2 → 1) |
 | **Salmon BTC** | Glowing fish with BTC symbol | Logo, profit icons | Wave dip on price drops |
 | **Hibernation Cave** | Dark cave mouth | Offline/error states | Fade-in with "Bear Nap" text |
+| **CoinGecko Logo** | Official CG logo (SVG/PNG from [brand kit](https://brand.coingecko.com/brand-kit)) | Price attribution footer/cards | Subtle pulse on load (`withSpring(1.05)`) |
 
 ### Icon Specifications
 - **Source**: Custom SVGs (no emoji overload—use sparingly for flair)
@@ -146,6 +147,13 @@ export const clawSwipe = () => {
 - Touch targets minimum 44x44px
 - VoiceOver labels on all interactive elements
 - High contrast mode support
+
+### Attribution Density (CoinGecko)
+- Always pair CoinGecko logo with "Powered by CoinGecko" text
+- Place in non-intrusive spots: dashboard footer, Settings > Credits
+- Use Micro scale (12px) caption font for attribution text
+- Hyperlink via `expo-linking` to coingecko.com (mandatory for API compliance)
+- Optional UTM: `?utm_source=bearbargain&utm_medium=app`
 
 ## 🔗 Design Resources
 

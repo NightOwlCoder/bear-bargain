@@ -269,6 +269,62 @@ GROK_API_KEY=dummy_local_fallback
 
 ---
 
+## 🐾 CoinGecko Attribution (MANDATORY for Demo Plan)
+
+CoinGecko requires visible attribution for all price data. Slap that logo like a bear paw on fresh salmon! 🐻🐟
+
+### Text + Logo Examples
+
+- **Simple Footer**: "Price data by [CoinGecko](https://www.coingecko.com)"
+- **With Logo**: CoinGecko logo (SVG from [brand kit](https://brand.coingecko.com/brand-kit)) hyperlinked to coingecko.com, plus "Powered by CoinGecko API".
+
+### React Native Implementation
+
+```tsx
+import { TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
+import * as Linking from 'expo-linking';
+
+export const CoinGeckoAttribution = () => (
+  <TouchableOpacity 
+    onPress={() => Linking.openURL('https://www.coingecko.com?utm_source=bearbargain&utm_medium=app')}
+    style={styles.container}
+  >
+    <Image 
+      source={{ uri: 'https://static.coingecko.com/s/coingecko-branding-guide-8447de673439420efa0ab1e0e03a1f8b0137c3f142f84f5f2685a7ae3e1c31b2.png' }} 
+      style={styles.logo}
+      resizeMode="contain"
+    />
+    <Text style={styles.text}>Data powered by CoinGecko</Text>
+  </TouchableOpacity>
+);
+
+const styles = StyleSheet.create({
+  container: { flexDirection: 'row', alignItems: 'center', padding: 8 },
+  logo: { width: 24, height: 24, marginRight: 8 },
+  text: { fontFamily: 'Inter-Regular', fontSize: 12, color: '#888' },
+});
+```
+
+### Placement Rules
+
+| Location | When to Use |
+|----------|-------------|
+| **Dashboard Footer** | Always visible (recommended) |
+| **Price Cards** | On each ETF card badge |
+| **Settings > Credits** | Full attribution + links |
+
+### UTM Tracking (Optional)
+
+Add `?utm_source=bearbargain&utm_medium=app` for analytics love back to CoinGecko.
+
+### ⚠️ Demo Plan Warning
+
+**Attribution = your free pass.** Skip it? Potential API throttle or key revocation. Keep it visible, keep it clean—sans-serif font, no distortion, hyperlinked.
+
+**Phase 2 upgrade?** Same rules apply. CoinGecko loves the love.
+
+---
+
 ## 🔧 Troubleshooting
 
 | Issue | Cause | Solution |
