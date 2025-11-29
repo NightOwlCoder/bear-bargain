@@ -9,7 +9,7 @@ import {
   PriceUpdateSchema,
   QueuedActionSchema,
 } from '../types/schemas';
-import { DipConfig } from '../utils/featureFlags';
+import { AnimationConfig, DipConfig } from '../utils/featureFlags';
 
 export type DipDetectorState = 'idle' | 'listening' | 'alert_firing' | 'cooldown';
 
@@ -140,7 +140,10 @@ export const useDipDetector = (
     },
   );
   const wsRef = useRef<WebSocket | null>(null);
-  const throttleRef = useRef<number>(0);
+  const throttleRef = useRef<Record<PriceUpdate['symbol'], number>>({
+    bitcoin: 0,
+    ethereum: 0,
+  });
 
   const resetStateMachine = useCallback(() => {
     setState('listening');
@@ -169,7 +172,7 @@ export const useDipDetector = (
       setTimeout(() => {
         setActiveAlert(null);
         enterCooldown();
-      }, DipConfig.wsThrottleMs + 200);
+      }, AnimationConfig.alertTtlMs);
     },
     [enterCooldown],
   );
@@ -188,8 +191,9 @@ export const useDipDetector = (
 
   const handlePriceUpdate = useCallback(
     (update: PriceUpdate) => {
-      if (Date.now() - throttleRef.current < DipConfig.wsThrottleMs) return;
-      throttleRef.current = Date.now();
+      const lastUpdateAt = throttleRef.current[update.symbol] ?? 0;
+      if (Date.now() - lastUpdateAt < DipConfig.wsThrottleMs) return;
+      throttleRef.current[update.symbol] = Date.now();
       const etfPrices = mapCryptoPriceToEtf(update);
       if (!etfPrices.length) return;
 
@@ -283,7 +287,7 @@ export const useDipDetector = (
       setTimeout(() => {
         setActiveAlert(null);
         enterCooldown();
-      }, DipConfig.wsThrottleMs + 200);
+      }, AnimationConfig.alertTtlMs);
     },
     [enqueueAction, enterCooldown, state],
   );
