@@ -105,6 +105,44 @@ export const mapCryptoPriceToEtf = (update: PriceUpdate): ETFPrice[] => {
 const createWsUrl = () =>
   'wss://stream.coingecko.com/price';
 
+// REST API fallback for initial prices (WebSocket requires Pro subscription)
+const fetchInitialPrices = async (): Promise<PriceUpdate[]> => {
+  try {
+    const apiKey = process.env.EXPO_PUBLIC_COINGECKO_API_KEY || process.env.COINGECKO_API_KEY || '';
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true${apiKey ? `&x_cg_demo_api_key=${apiKey}` : ''}`;
+    
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`CoinGecko API error: ${response.status}`);
+    
+    const data = await response.json();
+    const updates: PriceUpdate[] = [];
+    
+    if (data.bitcoin) {
+      updates.push({
+        symbol: 'bitcoin',
+        price: data.bitcoin.usd,
+        change24h: data.bitcoin.usd_24h_change || 0,
+        timestamp: Date.now(),
+      });
+    }
+    
+    if (data.ethereum) {
+      updates.push({
+        symbol: 'ethereum',
+        price: data.ethereum.usd,
+        change24h: data.ethereum.usd_24h_change || 0,
+        timestamp: Date.now(),
+      });
+    }
+    
+    console.log('🐻 Fetched initial prices from CoinGecko REST API:', updates);
+    return updates;
+  } catch (error) {
+    console.warn('Failed to fetch initial prices:', error);
+    return [];
+  }
+};
+
 type DipDetectorHook = {
   state: DipDetectorState;
   prices: Record<ETFSymbol, ETFPrice>;
@@ -223,36 +261,61 @@ export const useDipDetector = (
   );
 
   const connectWs = useCallback(() => {
+    // First, fetch initial prices via REST API (always works with free tier)
+    fetchInitialPrices().then((updates) => {
+      updates.forEach((update) => handlePriceUpdate(update));
+    });
+
+    // WebSocket requires Pro subscription - skip for free tier
     if (typeof WebSocket === 'undefined') {
-      console.warn('WebSocket unavailable; skipping live prices.');
+      console.warn('WebSocket unavailable; using REST API polling.');
+      setState('listening');
       return;
     }
 
-    const ws = new WebSocket(createWsUrl());
-    wsRef.current = ws;
-    ws.onopen = () => {
-      console.log('✅ WebSocket connected to CoinGecko');
+    // Try WebSocket but fallback gracefully
+    try {
+      const ws = new WebSocket(createWsUrl());
+      wsRef.current = ws;
+      ws.onopen = () => {
+        console.log('✅ WebSocket connected to CoinGecko');
+        setState('listening');
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          const parsed = PriceUpdateSchema.safeParse(data);
+          if (!parsed.success) return;
+          handlePriceUpdate(parsed.data);
+        } catch (err) {
+          console.warn('Invalid WebSocket payload', err);
+        }
+      };
+
+      ws.onerror = (err) => {
+        console.warn('WebSocket error (expected for free tier):', err);
+        // Continue with REST API polling
+        setState('listening');
+      };
+
+      ws.onclose = () => {
+        console.log('WebSocket closed - using REST API fallback');
+        setState('listening');
+      };
+    } catch (error) {
+      console.warn('WebSocket setup failed, using REST API:', error);
       setState('listening');
-    };
+    }
 
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        const parsed = PriceUpdateSchema.safeParse(data);
-        if (!parsed.success) return;
-        handlePriceUpdate(parsed.data);
-      } catch (err) {
-        console.warn('Invalid WebSocket payload', err);
-      }
-    };
+    // Set up REST API polling as fallback (every 30 seconds)
+    const pollInterval = setInterval(() => {
+      fetchInitialPrices().then((updates) => {
+        updates.forEach((update) => handlePriceUpdate(update));
+      });
+    }, 30000);
 
-    ws.onerror = (err) => {
-      console.error('WebSocket error', err);
-    };
-
-    ws.onclose = () => {
-      setState('idle');
-    };
+    return () => clearInterval(pollInterval);
   }, [handlePriceUpdate]);
 
   const triggerAlert: DipDetectorHook['triggerAlert'] = useCallback(
