@@ -93,7 +93,7 @@ EOF
 # ========================================
 # 3. Install global tools
 # ========================================
-npm install -g expo-cli @expo/eas-cli
+npm install -g eas-cli
 
 # ========================================
 # 4. Verify TypeScript setup
