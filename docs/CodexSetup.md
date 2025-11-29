@@ -55,9 +55,15 @@ set -e
 echo "🐻 BearBargain Codex Setup Starting..."
 
 # ========================================
-# 1. Install Node dependencies
+# 1. Conditional Install (AVOID COLLISION)
 # ========================================
-npm install
+if [ -f "src/hooks/useDipDetector.ts" ] || [ -f "src/providers/AnimationProvider.tsx" ]; then
+  echo "✅ Core files exist - Fast install (npm ci)"
+  npm ci --only=production
+else
+  echo "🆕 Fresh setup - Full install"
+  npm install
+fi
 
 # ========================================
 # 2. Create .env from environment/secrets
@@ -91,9 +97,9 @@ EXPO_PUBLIC_DIP_ALERT_VIBRATION=true
 EOF
 
 # ========================================
-# 3. Install global tools
+# 3. Install global tools (if missing)
 # ========================================
-npm install -g eas-cli
+command -v expo >/dev/null 2>&1 || npm install -g expo-cli @expo/eas-cli
 
 # ========================================
 # 4. Verify TypeScript setup
