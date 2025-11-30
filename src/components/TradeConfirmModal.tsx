@@ -32,11 +32,15 @@ export default function TradeConfirmModal({
   const overlayOpacity = useSharedValue(0);
   const cardScale = useSharedValue(0.94);
   const [isConfirming, setIsConfirming] = React.useState(false);
+  const isMountedRef = React.useRef(true);
 
   React.useEffect(() => {
     overlayOpacity.value = withTiming(1, { duration: 250 });
     cardScale.value = withSpring(1, { damping: 12, stiffness: 140 });
-  }, [cardScale, overlayOpacity]);
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, [cardScale, isMountedRef, overlayOpacity]);
 
   const modalStyle = useAnimatedStyle(() => ({
     opacity: overlayOpacity.value,
@@ -47,7 +51,11 @@ export default function TradeConfirmModal({
     if (isConfirming) return;
     setIsConfirming(true);
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    onConfirm(projection.recommendedAmount);
+    await onConfirm(projection.recommendedAmount);
+
+    if (isMountedRef.current) {
+      setIsConfirming(false);
+    }
   };
 
   return (
@@ -90,17 +98,22 @@ export default function TradeConfirmModal({
           </View>
 
           <View style={styles.actions}>
-            <Pressable style={[styles.button, styles.secondaryButton]} onPress={onClose}>
+            <Pressable
+              style={[styles.button, styles.secondaryButton]}
+              onPress={onClose}
+              disabled={isConfirming}
+            >
               <Text style={styles.secondaryText}>Later 😴</Text>
             </Pressable>
 
             <Pressable
-              style={[styles.button, styles.primaryButton]}
+              style={[styles.button, styles.primaryButton, isConfirming && styles.buttonDisabled]}
               onPress={handleBuy}
               accessibilityRole="button"
               accessibilityLabel="Execute mock buy now"
+              disabled={isConfirming}
             >
-              <Text style={styles.buyText}>BUY NOW!</Text>
+              <Text style={styles.buyText}>{isConfirming ? 'Executing…' : 'BUY NOW!'}</Text>
               <Text style={styles.buyDetails}>
                 ${projection.recommendedAmount.toLocaleString()} {parsedSymbol}
               </Text>
@@ -239,6 +252,9 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     backgroundColor: COLORS.gold,
+  },
+  buttonDisabled: {
+    opacity: 0.5,
   },
   buyText: {
     color: '#1f2937',
