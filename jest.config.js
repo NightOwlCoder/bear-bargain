@@ -1,7 +1,7 @@
 module.exports = {
+  preset: 'jest-expo',
   testEnvironment: 'node',
-  transform: {
-    '^.+\\.(ts|tsx)$': ['babel-jest', { presets: ['babel-preset-expo'] }],
-  },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(?:expo(nent)?|@expo(nent)?/.*|expo-modules-core/.*|@expo-google-fonts/.*|react-native|@react-native/.*|react-native-reanimated|@react-navigation/.*|expo-router)/)',
+  ],
 };
