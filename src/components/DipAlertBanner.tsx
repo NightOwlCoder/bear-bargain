@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Platform } from 'react-native';
+import { StyleSheet, Text, View, Platform, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { Audio } from 'expo-av';
@@ -13,6 +13,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { useRouter } from 'expo-router';
 import { DipAlert } from '../types/schemas';
 import { COLORS, GRADIENTS } from '../constants/colors';
 import { AnimationConfig } from '../utils/featureFlags';
@@ -118,6 +119,7 @@ const playBearRoarAudio = async (): Promise<void> => {
 
 export const DipAlertBanner: React.FC<DipAlertBannerProps> = ({ alert, onDismiss }) => {
   const soundRef = useRef<Audio.Sound | null>(null);
+  const router = useRouter();
 
   // Banner animation values
   const bannerTranslateX = useSharedValue(400);
@@ -262,7 +264,21 @@ export const DipAlertBanner: React.FC<DipAlertBannerProps> = ({ alert, onDismiss
             <Text style={styles.badge}>🐻 {alert.dipPercentage.toFixed(1)}% DIP!</Text>
             <Text style={styles.symbol}>{alert.symbol}</Text>
             <Text style={styles.price}>${alert.price.toFixed(2)}</Text>
-            <Text style={styles.cta}>🎯 SNIPE NOW!</Text>
+            <Pressable
+              onPress={() => {
+                onDismiss?.();
+                router.push({
+                  pathname: '/(modal)/trade-confirm',
+                  params: {
+                    symbol: alert.symbol,
+                    price: alert.price.toString(),
+                    dipPercentage: alert.dipPercentage.toString(),
+                  },
+                });
+              }}
+            >
+              <Text style={styles.cta}>🎯 SNIPE NOW!</Text>
+            </Pressable>
           </View>
 
         </LinearGradient>
