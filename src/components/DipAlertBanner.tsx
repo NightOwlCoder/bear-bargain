@@ -266,18 +266,27 @@ export const DipAlertBanner: React.FC<DipAlertBannerProps> = ({ alert, onDismiss
             <Text style={styles.price}>${alert.price.toFixed(2)}</Text>
             <Pressable
               style={styles.snipeButton}
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              onPress={async () => {
+                console.log('🐾 SNIPE BUTTON WORKS!');
+                console.log('🐾 SNIPE BUTTON PRESSED:', alert.symbol);
+                await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+                // Close banner first
                 onDismiss?.();
-                router.push({
-                  pathname: '/(modal)/trade-confirm',
-                  params: {
-                    symbol: alert.symbol,
-                    price: alert.price.toString(),
-                    dipPercentage: alert.dipPercentage.toString(),
-                  },
-                });
+
+                // Navigate to modal (1 SECOND DELAY)
+                setTimeout(() => {
+                  router.push({
+                    pathname: '/(modal)/trade-confirm',
+                    params: {
+                      symbol: alert.symbol,
+                      price: alert.price.toString(),
+                      dipPercentage: alert.dipPercentage.toString(),
+                    },
+                  });
+                }, 300);
               }}
+              testID="snipe-now-button"
             >
               <Text style={styles.snipeText}>🎯 SNIPE NOW!</Text>
             </Pressable>

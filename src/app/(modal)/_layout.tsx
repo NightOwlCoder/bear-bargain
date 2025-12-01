@@ -5,7 +5,7 @@ export default function ModalLayout() {
     <Stack
       screenOptions={{
         presentation: 'modal',
-        animation: 'slide',
+        animation: 'slide_from_bottom',
       }}
     >
       <Stack.Screen name="trade-confirm" options={{ headerShown: false }} />
