@@ -45,7 +45,13 @@ export default function TradeSuccess({ onClose }: { onClose: () => void }) {
           <Text style={styles.title}>TRADE EXECUTED!</Text>
           <Text style={styles.subtitle}>🐻 You sniped the dip!</Text>
 
-          <Pressable style={styles.doneButton} onPress={onClose}>
+          <Pressable
+            style={styles.doneButton}
+            onPress={async () => {
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              onClose();
+            }}
+          >
             <Text style={styles.doneText}>BACK TO DASHBOARD</Text>
           </Pressable>
         </LinearGradient>
