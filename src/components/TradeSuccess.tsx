@@ -13,7 +13,7 @@ export default function TradeSuccess({ onClose }: { onClose: () => void }) {
   const confettiOffset = useSharedValue(-24);
 
   React.useEffect(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackStyle.Success);
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     scale.value = withSpring(1, { damping: 10, stiffness: 140 });
     opacity.value = withTiming(1, { duration: 250 });
     confettiOffset.value = withSpring(0, { damping: 12, stiffness: 120 });
