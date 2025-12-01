@@ -265,19 +265,30 @@ export const DipAlertBanner: React.FC<DipAlertBannerProps> = ({ alert, onDismiss
             <Text style={styles.symbol}>{alert.symbol}</Text>
             <Text style={styles.price}>${alert.price.toFixed(2)}</Text>
             <Pressable
-              onPress={() => {
+              style={styles.snipeButton}
+              onPress={async () => {
+                console.log('🐾 SNIPE BUTTON WORKS!');
+                console.log('🐾 SNIPE BUTTON PRESSED:', alert.symbol);
+                await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+                // Close banner first
                 onDismiss?.();
-                router.push({
-                  pathname: '/(modal)/trade-confirm',
-                  params: {
-                    symbol: alert.symbol,
-                    price: alert.price.toString(),
-                    dipPercentage: alert.dipPercentage.toString(),
-                  },
-                });
+
+                // Navigate to modal (1 SECOND DELAY)
+                setTimeout(() => {
+                  router.push({
+                    pathname: '/(modal)/trade-confirm',
+                    params: {
+                      symbol: alert.symbol,
+                      price: alert.price.toString(),
+                      dipPercentage: alert.dipPercentage.toString(),
+                    },
+                  });
+                }, 300);
               }}
+              testID="snipe-now-button"
             >
-              <Text style={styles.cta}>🎯 SNIPE NOW!</Text>
+              <Text style={styles.snipeText}>🎯 SNIPE NOW!</Text>
             </Pressable>
           </View>
 
@@ -341,11 +352,24 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 2,
   },
-  cta: {
-    color: COLORS.gold,
+  snipeButton: {
+    marginTop: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+    backgroundColor: COLORS.gold,
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    shadowColor: COLORS.gold,
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 6,
+  },
+  snipeText: {
+    color: '#0f172a',
     fontSize: 16,
     fontWeight: '800',
-    marginTop: 8,
     textTransform: 'uppercase',
   },
   clawContainerLeft: {

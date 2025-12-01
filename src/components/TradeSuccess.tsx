@@ -13,7 +13,7 @@ export default function TradeSuccess({ onClose }: { onClose: () => void }) {
   const confettiOffset = useSharedValue(-24);
 
   React.useEffect(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackStyle.Success);
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     scale.value = withSpring(1, { damping: 10, stiffness: 140 });
     opacity.value = withTiming(1, { duration: 250 });
     confettiOffset.value = withSpring(0, { damping: 12, stiffness: 120 });
@@ -45,7 +45,13 @@ export default function TradeSuccess({ onClose }: { onClose: () => void }) {
           <Text style={styles.title}>TRADE EXECUTED!</Text>
           <Text style={styles.subtitle}>🐻 You sniped the dip!</Text>
 
-          <Pressable style={styles.doneButton} onPress={onClose}>
+          <Pressable
+            style={styles.doneButton}
+            onPress={async () => {
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              onClose();
+            }}
+          >
             <Text style={styles.doneText}>BACK TO DASHBOARD</Text>
           </Pressable>
         </LinearGradient>
